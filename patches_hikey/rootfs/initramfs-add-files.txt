@@ -1,0 +1,12 @@
+# Files to add to filesystem.cpio.gz
+# Syntax: same as gen_rootfs/filelist.txt
+
+# Script called by udhcpc (DHCP client) to update the network configuration
+dir /etc/udhcp 755 0 0
+file /etc/udhcp/simple.script ${TOP}/busybox/examples/udhcp/simple.script 755 0 0
+
+# Run this manually after plugging a USB to ethernet adapter
+file /usbnet.sh ${TOP}/patches_hikey/rootfs/usbnet.sh 755 0 0
+
+# strace tool
+file /bin/strace ${TOP}/strace/strace 755 0 0
