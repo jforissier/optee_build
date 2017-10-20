@@ -1,0 +1,39 @@
+[submodule "busybox"]
+	path = busybox
+	url = https://github.com/mirror/busybox
+[submodule "gen_rootfs"]
+	path = gen_rootfs
+	url = https://github.com/linaro-swg/gen_rootfs
+[submodule "linux.linaro-swg"]
+	path = linux
+	url = https://github.com/linaro-swg/linux
+	branch = rpi3-optee-4.6
+[submodule "optee_benchmark"]
+	path = optee_benchmark
+	url = https://github.com/linaro-swg/optee_benchmark
+[submodule "optee_client"]
+	path = optee_client
+	url = https://github.com/OP-TEE/optee_client
+[submodule "optee_examples"]
+	path = optee_examples
+	url = https://github.com/linaro-swg/optee_examples
+[submodule "optee_os"]
+	path = optee_os
+	url = https://github.com/OP-TEE/optee_os
+[submodule "optee_test"]
+	path = optee_test
+	url = https://github.com/OP-TEE/optee_test
+[submodule "common"]
+	path = common
+	url = https://github.com/jforissier/optee_build_common
+[submodule "firmware.raspberrypi"]
+	path = firmware
+	url = https://github.com/raspberrypi/firmware.git
+[submodule "arm-trusted-firmware.linaro-swg"]
+	path = arm-trusted-firmware
+	url = https://github.com/linaro-swg/arm-trusted-firmware
+	branch = rpi3_initial_drop
+[submodule "u-boot.linaro-swg"]
+	path = u-boot
+	url = https://github.com/linaro-swg/u-boot
+	branch = rpi3_initial_drop
