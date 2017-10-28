@@ -58,6 +58,7 @@ bios-qemu: update_rootfs optee-os
 bios-qemu-clean:
 	$(call bios-qemu-common) clean
 
+.PHONY: qemu
 qemu:
 	cd $(QEMU_PATH); ./configure --target-list=arm-softmmu\
 			$(QEMU_CONFIGURE_PARAMS_COMMON)
