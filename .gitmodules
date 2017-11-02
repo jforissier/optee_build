@@ -6,7 +6,7 @@
 	url = https://github.com/linaro-swg/gen_rootfs
 [submodule "linux.96boards-hikey"]
 	path = linux
-	url = https://github.com/96boards-hikey
+	url = https://github.com/96boards-hikey/linux
 	branch = hikey960-v4.9
 [submodule "optee_client"]
 	path = optee_client
