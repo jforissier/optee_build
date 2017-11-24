@@ -1,0 +1,24 @@
+git:
+  # Use our own method (gitsm script) to update the submodules, allows caching
+  submodules: false
+build:
+  cache: true
+  cache_dir_list:
+    - ${HOME}/.ccache
+    - ${HOME}/.gitsm_cache
+  pre_ci_boot:
+    image_name: jforissier/optee_build_ci
+    image_tag: latest
+    pull: true
+    options: "-e HOME=/root"
+  ci:
+    - mkdir -p ~/bin
+    - curl https://raw.githubusercontent.com/jforissier/optee_build_common/master/gitsm >~/bin/gitsm
+    - chmod a+x ~/bin/gitsm
+    - export PATH=$PATH:~/bin
+    - gitsm cache
+    - gitsm update
+    - git submodule
+    - export LC_ALL=C
+    - make toolchains
+    - make -s -j$(getconf _NPROCESSORS_ONLN) check DUMP_LOGS_ON_ERROR=1 CFG_RPMB_FS=y CFG_RPMB_WRITE_KEY=y
