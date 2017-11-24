@@ -195,7 +195,7 @@ check: $(CHECK_DEPS)
 	cd $(BINARIES_PATH) && \
 		export QEMU=$(ROOT)/qemu/arm-softmmu/qemu-system-arm && \
 		export QEMU_SMP=$(QEMU_SMP) && \
-		expect $(ROOT)/build/qemu-check.exp -- $(check-args) || \
+		expect $(ROOT)/qemu-check.exp -- $(check-args) || \
 		(if [ "$(DUMP_LOGS_ON_ERROR)" ]; then \
 			echo "== $$PWD/serial0.log:"; \
 			cat serial0.log; \
