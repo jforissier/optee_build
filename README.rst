@@ -21,6 +21,9 @@ and so on), as well as tags that match OP-TEE releases (`2.6.0-qemu`,
 - Tags are made on stable (tested) snapshots of the platform branches, using
   released OP-TEE versions.
 
+Continuous Integration (CI) status is available on the Shippable page of the
+project: https://app.shippable.com/github/jforissier/optee_build/dashboard.
+
 Prerequisites
 -------------
 
