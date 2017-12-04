@@ -162,11 +162,11 @@ is deleted or becomes corrupted.
 FAQ
 ---
 
-Please have a look at our FAQ_ for a list of commonly asked questions and their
+Please have a look at the `OP-TEE FAQ`_ for a list of commonly asked questions and their
 answers.
 
 
 .. _OP-TEE OS: https://github.com/OP-TEE/optee_os
 .. _xtest: https://github.com/OP-TEE/optee_test
-.. _FAQ: https://github.com/OP-TEE/optee_website/tree/master/faq
+.. _OP-TEE FAQ: https://github.com/OP-TEE/optee_website/tree/master/faq
 
