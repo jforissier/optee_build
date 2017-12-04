@@ -29,6 +29,7 @@
 [submodule "firmware.raspberrypi"]
 	path = firmware
 	url = https://github.com/raspberrypi/firmware.git
+	shallow = true
 [submodule "arm-trusted-firmware.linaro-swg"]
 	path = arm-trusted-firmware
 	url = https://github.com/linaro-swg/arm-trusted-firmware
