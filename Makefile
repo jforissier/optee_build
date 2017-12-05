@@ -195,6 +195,8 @@ RPI3_STOCK_FW_FILENAMES := bootcode.bin COPYING.linux fixup_cd.dat fixup.dat fix
 RPI3_STOCK_FW_FILES := $(patsubst %,$(RPI3_STOCK_FW_PATH)/boot/%,$(RPI3_STOCK_FW_FILENAMES))
 RPI3_STOCK_FW_URL := https://github.com/raspberrypi/firmware/raw/1.20170215
 
+.DELETE_ON_ERROR:
+
 $(RPI3_STOCK_FW_PATH)/boot/%:
 	mkdir -p $(@D)
 	curl $(RPI3_STOCK_FW_URL)/boot/$(@F) >$@
