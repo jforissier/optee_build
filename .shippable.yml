@@ -16,7 +16,7 @@ build:
     - curl https://raw.githubusercontent.com/jforissier/optee_build_common/master/gitsm >~/bin/gitsm
     - chmod a+x ~/bin/gitsm
     - export PATH=$PATH:~/bin
-    - gitsm cache
+    - gitsm cache -x linux
     - gitsm update
     - git submodule update --recursive edk2
     - git submodule
