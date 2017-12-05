@@ -190,9 +190,21 @@ benchmark-app-clean: benchmark-app-clean-common
 ################################################################################
 # Root FS
 ################################################################################
+
+RPI3_STOCK_FW_FILENAMES := bootcode.bin COPYING.linux fixup_cd.dat fixup.dat fixup_db.dat fixup_x.dat LICENCE.broadcom start_cd.elf start_db.elf start.elf start_x.elf
+RPI3_STOCK_FW_FILES := $(patsubst %,$(RPI3_STOCK_FW_PATH)/boot/%,$(RPI3_STOCK_FW_FILENAMES))
+RPI3_STOCK_FW_URL := https://github.com/raspberrypi/firmware/raw/1.20170215
+
+$(RPI3_STOCK_FW_PATH)/boot/%:
+	mkdir -p $(@D)
+	curl $(RPI3_STOCK_FW_URL)/boot/$(@F) >$@
+
+.PHONY: fw-files
+fw-files: $(RPI3_STOCK_FW_FILES)
+
 .PHONY: filelist-tee
 filelist-tee: linux
-filelist-tee: filelist-tee-common
+filelist-tee: filelist-tee-common $(RPI3_STOCK_FW_FILES)
 	@echo "dir /usr/bin 755 0 0" >> $(GEN_ROOTFS_FILELIST)
 	@echo "dir /boot 755 0 0" >> $(GEN_ROOTFS_FILELIST)
 	@echo "file /boot/bcm2710-rpi-3-b.dtb $(LINUX_DTB) 755 0 0" >> $(GEN_ROOTFS_FILELIST)
