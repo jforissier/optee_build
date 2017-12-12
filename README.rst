@@ -1,9 +1,16 @@
 **WARNING**:
 
 This Git is **experimental**. It is an ongoing attempt at rewriting the official
-OP-TEE build repository (https://github.com/OP-TEE/build) using Git submodules
-instead of Google's `repo` tool. It may be incomplete, outdated, or even totally
-broken.
+OP-TEE build repositories (https://github.com/OP-TEE/build and
+https://github.com/OP-TEE/manifest) using Git submodules instead of Google's
+`repo` tool. It may be incomplete, outdated, or even totally broken.
+
+--------------------------------------------------------------------------------
+
+**Note**:
+
+Platform code is in separate branches. Please browse or checkout the branch you
+are interested in!
 
 --------------------------------------------------------------------------------
 
