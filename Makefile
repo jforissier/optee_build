@@ -442,7 +442,7 @@ ifneq ($(FROM_RECOVERY),1)
 endif
 	@read -r -p "Then press enter to continue flashing" dummy
 	@echo
-	fastboot flash ptable $(LLOADER_PATH)/prm_ptable.img
+	fastboot flash ptable $(LLOADER_PATH)/ptable-linux-$(CFG_FLASH_SIZE)g.img
 	fastboot flash fastboot $(ARM_TF_PATH)/build/hikey/$(ARM_TF_BUILD)/fip.bin
 	fastboot flash nvme $(NVME_IMG)
 	fastboot flash boot $(BOOT_IMG)
