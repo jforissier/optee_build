@@ -18,6 +18,8 @@ CFG_FLASH_SIZE ?= 8
 # Support for TEE memory statistics reporting via the tee-stats application
 CFG_WITH_STATS ?= y
 
+export
+
 ################################################################################
 # Includes
 ################################################################################
@@ -207,9 +209,7 @@ linux-cleaner: linux-cleaner-common
 ################################################################################
 # OP-TEE
 ################################################################################
-OPTEE_OS_COMMON_FLAGS += PLATFORM=hikey \
-			CFG_CONSOLE_UART=$(CFG_SW_CONSOLE_UART) \
-			CFG_WITH_STATS=$(CFG_WITH_STATS)
+OPTEE_OS_COMMON_FLAGS += PLATFORM=hikey
 OPTEE_OS_CLEAN_COMMON_FLAGS += PLATFORM=hikey
 
 .PHONY: optee-os
