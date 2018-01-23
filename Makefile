@@ -15,6 +15,9 @@ CFG_SW_CONSOLE_UART ?= 3
 # eMMC flash size: 8 or 4 GB [default 8]
 CFG_FLASH_SIZE ?= 8
 
+# Support for TEE memory statistics reporting via the tee-stats application
+CFG_WITH_STATS ?= y
+
 ################################################################################
 # Includes
 ################################################################################
@@ -55,13 +58,13 @@ STRACE_PATH			?=$(ROOT)/strace
 # Targets
 ################################################################################
 .PHONY: all
-all: prepare arm-tf boot-img lloader nvme strace
+all: prepare arm-tf boot-img lloader nvme strace tee-stats
 
 .PHONY: clean
 clean: arm-tf-clean atf-fb-clean busybox-clean edk2-clean linux-clean \
 		optee-os-clean optee-client-clean xtest-clean \
 		optee-examples-clean strace-clean update_rootfs-clean \
-		boot-img-clean lloader-clean grub-clean
+		boot-img-clean lloader-clean grub-clean tee-stats-clean
 
 .PHONY: cleaner
 cleaner: clean prepare-cleaner busybox-cleaner linux-cleaner strace-cleaner \
@@ -205,7 +208,8 @@ linux-cleaner: linux-cleaner-common
 # OP-TEE
 ################################################################################
 OPTEE_OS_COMMON_FLAGS += PLATFORM=hikey \
-			CFG_CONSOLE_UART=$(CFG_SW_CONSOLE_UART)
+			CFG_CONSOLE_UART=$(CFG_SW_CONSOLE_UART) \
+			CFG_WITH_STATS=$(CFG_WITH_STATS)
 OPTEE_OS_CLEAN_COMMON_FLAGS += PLATFORM=hikey
 
 .PHONY: optee-os
@@ -262,6 +266,17 @@ strace-clean:
 .PHONY: strace-cleaner
 strace-cleaner: strace-clean
 	rm -f $(STRACE_PATH)/Makefile $(STRACE_PATH)/configure
+
+################################################################################
+# tee-stats client application
+################################################################################
+
+.PHONY: tee-stats
+tee-stats:
+	$(MAKE) -C tee-stats
+
+tee-stats-clean:
+	$(MAKE) -C tee-stats clean
 
 ################################################################################
 # Root FS

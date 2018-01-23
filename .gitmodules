@@ -53,3 +53,6 @@
 [submodule "common"]
 	path = common
 	url = https://github.com/jforissier/optee_build_common
+[submodule "tee-stats"]
+	path = tee-stats
+	url = https://github.com/jforissier/tee-stats
