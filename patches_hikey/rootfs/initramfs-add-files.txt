@@ -10,6 +10,3 @@ file /usbnet.sh ${TOP}/patches_hikey/rootfs/usbnet.sh 755 0 0
 
 # strace tool
 file /bin/strace ${TOP}/strace/strace 755 0 0
-
-# Memory statistics tool
-file /bin/tee-stats ${TOP}/tee-stats/out/tee-stats 755 0 0

@@ -60,13 +60,13 @@ STRACE_PATH			?=$(ROOT)/strace
 # Targets
 ################################################################################
 .PHONY: all
-all: prepare arm-tf boot-img lloader nvme strace tee-stats
+all: prepare arm-tf boot-img lloader nvme strace
 
 .PHONY: clean
 clean: arm-tf-clean atf-fb-clean busybox-clean edk2-clean linux-clean \
 		optee-os-clean optee-client-clean xtest-clean \
 		optee-examples-clean strace-clean update_rootfs-clean \
-		boot-img-clean lloader-clean grub-clean tee-stats-clean
+		boot-img-clean lloader-clean grub-clean
 
 .PHONY: cleaner
 cleaner: clean prepare-cleaner busybox-cleaner linux-cleaner strace-cleaner \
@@ -270,13 +270,14 @@ strace-cleaner: strace-clean
 ################################################################################
 # tee-stats client application
 ################################################################################
-
+ifeq ($(CFG_WITH_STATS),y)
+all: tee-stats
+clean: tee-stats-clean
+endif
 .PHONY: tee-stats
-tee-stats:
-	$(MAKE) -C tee-stats
+tee-stats: tee-stats-common
 
-tee-stats-clean:
-	$(MAKE) -C tee-stats clean
+tee-stats-clean: tee-stats-clean-common
 
 ################################################################################
 # Root FS
