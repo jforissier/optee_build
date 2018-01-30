@@ -10,6 +10,11 @@ override COMPILE_S_KERNEL  := 32
 
 -include common/common.mk
 
+# Support for TEE memory statistics reporting via the tee-stats application
+CFG_WITH_STATS ?= y
+
+export
+
 ################################################################################
 # Paths to git projects and various binaries
 ################################################################################
@@ -148,6 +153,18 @@ optee-examples-clean: optee-examples-clean-common
 benchmark-app: benchmark-app-common
 
 benchmark-app-clean: benchmark-app-clean-common
+
+################################################################################
+# tee-stats client application
+################################################################################
+ifeq ($(CFG_WITH_STATS),y)
+all: tee-stats
+clean: tee-stats-clean
+endif
+.PHONY: tee-stats
+tee-stats: tee-stats-common
+
+tee-stats-clean: tee-stats-clean-common
 
 ################################################################################
 # Root FS
