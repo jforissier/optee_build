@@ -413,53 +413,41 @@ nvme-cleaner:
 ################################################################################
 # Flash
 ################################################################################
-define flash_help
-	@read -r -p "1. Connect USB OTG cable, the micro USB cable (press enter)" dummy
-	@read -r -p "2. Connect HiKey to power up (press enter)" dummy
-endef
 
+# Recovery mode
+#
+# 1. Make sure udev permissions are set appropriately:
+#   # /etc/udev/rules.d/hikey.rules
+#   SUBSYSTEM=="usb", ATTRS{idVendor}=="18d1", ATTRS{idProduct}=="d00d", MODE="0666"
+#   SUBSYSTEM=="usb", ATTRS{idVendor}=="12d1", MODE="0666", ENV{ID_MM_DEVICE_IGNORE}="1"
+#
+# 2. Set jumpers as follows:
+# Jumper 1-2: Closed (Auto power up = Boot up when power is applied)
+#        3-4: Closed (Boot Select = Recovery: program eMMC from USB OTG)
+#        5-6: Open (GPIO3-1 = High: UEFI runs normally)
+#
+# 3. Power up the board and run "make recovery"
 .PHONY: recovery
 recovery:
-	@echo "Enter recovery mode to flash a new bootloader"
-	@echo
-	@echo "Make sure udev permissions are set appropriately:"
-	@echo "  # /etc/udev/rules.d/hikey.rules"
-	@echo '  SUBSYSTEM=="usb", ATTRS{idVendor}=="18d1", ATTRS{idProduct}=="d00d", MODE="0666"'
-	@echo '  SUBSYSTEM=="usb", ATTRS{idVendor}=="12d1", MODE="0666", ENV{ID_MM_DEVICE_IGNORE}="1"'
-	@echo
-	@echo "Set jumpers as follows:"
-	@echo "Jumper 1-2: Closed (Auto power up = Boot up when power is applied)"
-	@echo "       3-4: Closed (Boot Select = Recovery: program eMMC from USB OTG)"
-	@echo "       5-6: Open (GPIO3-1 = High: UEFI runs normally)"
-	@read -r -p "Press enter to continue" dummy
-	@echo
-	$(call flash_help)
-	@echo
 	python $(ROOT)/burn-boot/hisi-idt.py --img1=$(LLOADER_PATH)/recovery.bin
 	fastboot flash loader $(LLOADER_PATH)/l-loader.bin
-	@echo
-	@echo "3. Wait until you see the (UART) message"
-	@echo "    \"Enter downloading mode. Please run fastboot command on Host.\""
-	@echo "    \"usb: online (highspeed)\""
-	@$(MAKE) --no-print flash FROM_RECOVERY=1
+	@$(MAKE) --no-print flash
 
+# Flash binaries using fastboot
+#
+# 1. Make sure permissions are set appropriately (see "Recovery mode" above)
+#
+# 2. Set jumpers for "normal" boot mode, and select "Fastboot" in the GRUB menu
+# Jumper 1-2: Closed (Auto power up = Boot up when power is applied)
+#        3-4: Open (Boot Select = Boot from eMMC)
+#        5-6: Open (GPIO3-1 = High: UEFI runs normally)
+#
+# 3. Run "make flash"
+#
+# Note: by closing jumper 5-6, UEFI would enter Fastboot directly, but it is
+# usually more convenient to keep the jumpers in normal boot mode and use GRUB
 .PHONY: flash
 flash:
-ifneq ($(FROM_RECOVERY),1)
-	@echo "Flash binaries using fastboot"
-	@echo
-	@echo "Set jumpers as follows:"
-	@echo "Jumper 1-2: Closed (Auto power up = Boot up when power is applied)"
-	@echo "       3-4: Open (Boot Select = Boot from eMMC)"
-	@echo "       5-6: Closed (GPIO3-1 = Low: UEFI runs Fastboot app)"
-	@read -r -p "Press enter to continue" dummy
-	@echo
-	$(call flash_help)
-	@echo "3. Wait until you see the (UART) message"
-	@echo "    \"Android Fastboot mode - version x.x Press any key to quit.\""
-endif
-	@read -r -p "Then press enter to continue flashing" dummy
-	@echo
 	fastboot flash ptable $(LLOADER_PATH)/ptable-linux-$(CFG_FLASH_SIZE)g.img
 	fastboot flash fastboot $(ARM_TF_PATH)/build/hikey/$(ARM_TF_BUILD)/fip.bin
 	fastboot flash nvme $(NVME_IMG)
