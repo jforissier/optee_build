@@ -47,3 +47,6 @@
 [submodule "tools-images-hikey960"]
 	path = tools-images-hikey960
 	url = https://github.com/96boards-hikey/tools-images-hikey960
+[submodule "tee-stats"]
+	path = tee-stats
+	url = https://github.com/jforissier/tee-stats
