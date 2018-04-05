@@ -1,9 +1,13 @@
 **WARNING**:
 
-This Git is **experimental**. It is an ongoing attempt at rewriting the official
+This Git is **experimental**. It is a re-write of the official
 OP-TEE build repositories (https://github.com/OP-TEE/build and
 https://github.com/OP-TEE/manifest) using Git submodules instead of Google's
-`repo` tool. It may be incomplete, outdated, or even totally broken.
+`repo` tool. I use it for my everyday work on OP-TEE on HiKey, HiKey960 and
+QEMU (mostly), so you can expect these platforms to just work, although things
+might be a bit outdated compared to the official Gits (for instance, this
+repository does not use buildroot and CMake introduced recently in manifest.git
+and build.git).
 
 --------------------------------------------------------------------------------
 
@@ -156,11 +160,15 @@ environment for QEMU and QEMUv8 (for instance)::
   cd ~/optee_build_qemu
   gitsm cache
   gitsm update
+  # Optional: update optee* submodules to their latest upstream state
+  gitsm update --remote optee*
 
   git clone -b qemu_v8 https://github.com/jforissier/optee_build optee_build_qemu_v8
   cd ~/optee_build_qemu_v8
   gitsm cache
   gitsm update
+  # Optional: update optee* submodules to their latest upstream state
+  gitsm update --remote optee*
 
 Please see ``gitsm -h`` for details, and note that sharing object references
 between Git repositories *will* cause problems if the reference Git (the cache)
