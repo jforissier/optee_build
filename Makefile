@@ -11,6 +11,9 @@ COMPILE_S_KERNEL  ?= 64
 # Normal and secure world console UART: 6 (v2 or newer board) or 5 (v1 board)
 CFG_CONSOLE_UART ?= 6
 
+# Support for TEE memory statistics reporting via the tee-stats application
+CFG_WITH_STATS ?= y
+
 ################################################################################
 # Includes
 ################################################################################
@@ -195,7 +198,8 @@ linux-cleaner: linux-cleaner-common
 ################################################################################
 OPTEE_OS_COMMON_FLAGS += PLATFORM=hikey-hikey960 \
 			CFG_CONSOLE_UART=$(CFG_CONSOLE_UART) \
-			CFG_SECURE_DATA_PATH=n
+			CFG_SECURE_DATA_PATH=n \
+			CFG_WITH_STATS=$(CFG_WITH_STATS)
 OPTEE_OS_CLEAN_COMMON_FLAGS += PLATFORM=hikey-hikey960
 
 .PHONY: optee-os
@@ -252,6 +256,19 @@ strace-clean:
 .PHONY: strace-cleaner
 strace-cleaner: strace-clean
 	rm -f $(STRACE_PATH)/Makefile $(STRACE_PATH)/configure
+
+################################################################################
+# tee-stats client application
+################################################################################
+
+ifeq ($(CFG_WITH_STATS),y)
+all: tee-stats
+clean: tee-stats-clean
+endif
+.PHONY: tee-stats
+tee-stats: tee-stats-common
+
+tee-stats-clean: tee-stats-clean-common
 
 ################################################################################
 # Root FS
