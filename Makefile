@@ -100,7 +100,7 @@ busybox-cleaner: busybox-cleaner-common
 # EDK2 / Tianocore
 ################################################################################
 define edk2-call
-	GCC49_AARCH64_PREFIX=$(LEGACY_AARCH64_CROSS_COMPILE) \
+	GCC49_AARCH64_PREFIX=$(AARCH64_CROSS_COMPILE) \
 		$(MAKE) -j1 -C $(EDK2_PATH) \
 		-f ArmPlatformPkg/Scripts/Makefile EDK2_ARCH=AARCH64 \
 		EDK2_DSC=ArmVirtPkg/ArmVirtQemuKernel.dsc \
