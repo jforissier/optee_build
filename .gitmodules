@@ -7,7 +7,7 @@
 [submodule "linux.96boards-hikey"]
 	path = linux
 	url = https://github.com/96boards-hikey/linux
-	branch = hikey960-v4.9
+	branch = working-hikey960-upstream-rebase-v4.13-rc1-2017-07-20-08-46-50
 [submodule "optee_client"]
 	path = optee_client
 	url = https://github.com/OP-TEE/optee_client
