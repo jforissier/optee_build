@@ -18,6 +18,7 @@ export
 ################################################################################
 # Paths to git projects and various binaries
 ################################################################################
+ARM_TF_PATH			?= $(ROOT)/arm-trusted-firmware
 BIOS_QEMU_PATH			?= $(ROOT)/bios_qemu_tz_arm
 QEMU_PATH			?= $(ROOT)/qemu
 BINARIES_PATH			?= $(ROOT)/out/bin
@@ -33,12 +34,56 @@ ifeq ($(CFG_TEE_BENCHMARK),y)
 all: benchmark-app
 clean: benchmark-app-clean
 endif
-all: bios-qemu qemu soc-term optee-examples
-clean: bios-qemu-clean busybox-clean linux-clean optee-os-clean \
+all: arm-tf bios-qemu qemu soc-term optee-examples
+clean: arm-tf-clean bios-qemu-clean busybox-clean linux-clean optee-os-clean \
 	optee-client-clean qemu-clean soc-term-clean check-clean \
 	optee-examples-clean
 
 -include common/toolchain.mk
+
+################################################################################
+# ARM Trusted Firmware
+################################################################################
+ARM_TF_EXPORTS ?= \
+	CROSS_COMPILE="$(CCACHE)$(AARCH32_CROSS_COMPILE)"
+
+ARM_TF_DEBUG ?= $(DEBUG)
+ifeq ($(ARM_TF_DEBUG),0)
+ARM_TF_LOGLVL ?= 30
+ARM_TF_OUT = $(ARM_TF_PATH)/build/qemu/release
+else
+ARM_TF_LOGLVL ?= 50
+ARM_TF_OUT = $(ARM_TF_PATH)/build/qemu/debug
+endif
+
+ARM_TF_FLAGS ?= \
+	BL32=$(OPTEE_OS_HEADER_V2_BIN) \
+	BL32_EXTRA1=$(OPTEE_OS_PAGER_V2_BIN) \
+	BL32_EXTRA2=$(OPTEE_OS_PAGEABLE_V2_BIN) \
+	BL33=$(ROOT)/out/bios-qemu/bios.bin \
+	ARM_ARCH_MAJOR=7 \
+	ARCH=aarch32 \
+	PLAT=qemu \
+	DEBUG=$(ARM_TF_DEBUG) \
+	ENABLE_ASSERTIONS=$(ARM_TF_DEBUG) \
+	LOG_LEVEL=$(ARM_TF_LOGLVL) \
+	MULTI_CONSOLE_API=0 \
+	ARM_TSP_RAM_LOCATION=tdram \
+	BL32_RAM_LOCATION=tdram \
+	AARCH32_SP=optee
+
+arm-tf: optee-os bios-qemu
+	$(ARM_TF_EXPORTS) $(MAKE) -C $(ARM_TF_PATH) $(ARM_TF_FLAGS) all fip
+	mkdir -p $(BINARIES_PATH)
+	ln -sf $(ARM_TF_OUT)/bl1.bin $(BINARIES_PATH)
+	ln -sf $(ARM_TF_OUT)/bl2.bin $(BINARIES_PATH)
+	ln -sf $(OPTEE_OS_HEADER_V2_BIN) $(BINARIES_PATH)/bl32.bin
+	ln -sf $(OPTEE_OS_PAGER_V2_BIN) $(BINARIES_PATH)/bl32_extra1.bin
+	ln -sf $(OPTEE_OS_PAGEABLE_V2_BIN) $(BINARIES_PATH)/bl32_extra2.bin
+	ln -sf $(ROOT)/out/bios-qemu/bios.bin $(BINARIES_PATH)/bl33.bin
+
+arm-tf-clean:
+	$(ARM_TF_EXPORTS) $(MAKE) -C $(ARM_TF_PATH) $(ARM_TF_FLAGS) clean
 
 ################################################################################
 # QEMU
@@ -51,14 +96,8 @@ define bios-qemu-common
 endef
 
 bios-qemu: update_rootfs optee-os
-	mkdir -p $(BINARIES_PATH)
-	ln -sf $(OPTEE_OS_HEADER_V2_BIN) $(BINARIES_PATH)
-	ln -sf $(OPTEE_OS_PAGER_V2_BIN) $(BINARIES_PATH)
-	ln -sf $(OPTEE_OS_PAGEABLE_V2_BIN) $(BINARIES_PATH)
-	ln -sf $(LINUX_PATH)/arch/arm/boot/zImage $(BINARIES_PATH)
-	ln -sf $(GEN_ROOTFS_PATH)/filesystem.cpio.gz \
-		$(BINARIES_PATH)/rootfs.cpio.gz
 	$(call bios-qemu-common)
+	ln -sf $(ROOT)/out/bios-qemu/bios.bin $(BINARIES_PATH)
 
 bios-qemu-clean:
 	$(call bios-qemu-common) clean
@@ -98,6 +137,8 @@ linux-defconfig: $(LINUX_PATH)/.config
 LINUX_COMMON_FLAGS += ARCH=arm
 
 linux: linux-common
+	mkdir -p $(BINARIES_PATH)
+	ln -sf $(LINUX_PATH)/arch/arm/boot/zImage $(BINARIES_PATH)
 
 linux-defconfig-clean: linux-defconfig-clean-common
 
@@ -179,7 +220,10 @@ update_rootfs: update_rootfs-common
 .PHONY: run
 # This target enforces updating root fs etc
 run: all
+	ln -sf $(ROOT)/gen_rootfs/filesystem.cpio.gz $(BINARIES_PATH)/rootfs.cpio.gz
 	$(MAKE) run-only
+
+QEMU_SMP ?= 1
 
 .PHONY: run-only
 run-only:
@@ -191,10 +235,11 @@ run-only:
 	(cd $(BINARIES_PATH) && $(QEMU_PATH)/arm-softmmu/qemu-system-arm \
 		-nographic \
 		-serial tcp:localhost:54320 -serial tcp:localhost:54321 \
+		-smp $(QEMU_SMP) \
 		-s -S -machine virt -machine secure=on -cpu cortex-a15 \
 		-d unimp  -semihosting-config enable,target=native \
 		-m 1057 \
-		-bios $(ROOT)/out/bios-qemu/bios.bin \
+		-bios bl1.bin \
 		$(QEMU_EXTRA_ARGS) )
 
 
@@ -202,13 +247,13 @@ ifneq ($(filter check,$(MAKECMDGOALS)),)
 CHECK_DEPS := all
 endif
 
-check-args := --bios $(ROOT)/out/bios-qemu/bios.bin
+check-args := --bios $(BINARIES_PATH)/bl1.bin
 ifneq ($(TIMEOUT),)
 check-args += --timeout $(TIMEOUT)
 endif
 
-QEMU_SMP ?= 1
 check: $(CHECK_DEPS)
+	ln -sf $(ROOT)/gen_rootfs/filesystem.cpio.gz $(BINARIES_PATH)/rootfs.cpio.gz
 	cd $(BINARIES_PATH) && \
 		export QEMU=$(ROOT)/qemu/arm-softmmu/qemu-system-arm && \
 		export QEMU_SMP=$(QEMU_SMP) && \
