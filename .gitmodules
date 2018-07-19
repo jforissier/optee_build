@@ -1,6 +1,3 @@
-[submodule "bios_qemu_tz_arm"]
-	path = bios_qemu_tz_arm
-	url = https://github.com/linaro-swg/bios_qemu_tz_arm
 [submodule "busybox"]
 	path = busybox
 	url = https://github.com/mirror/busybox
@@ -41,3 +38,7 @@
 [submodule "arm-trusted-firmware"]
 	path = arm-trusted-firmware
 	url = https://github.com/ARM-software/arm-trusted-firmware
+[submodule "u-boot.linaro-swg"]
+	path = u-boot
+	url = https://github.com/linaro-swg/u-boot
+	branch = optee
