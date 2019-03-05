@@ -6,4 +6,4 @@
 # Adjust USB device as needed
 
 DEV=${1:-/dev/ttyUSB0}
-miniterm --raw --eol CR ${DEV} 115200
+miniterm.py --raw --eol CR ${DEV} 115200
