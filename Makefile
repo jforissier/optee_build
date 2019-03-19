@@ -160,9 +160,7 @@ edk2-clean:
 ################################################################################
 LINUX_DEFCONFIG_COMMON_ARCH ?= arm64
 LINUX_DEFCONFIG_COMMON_FILES ?= $(LINUX_PATH)/arch/arm64/configs/defconfig \
-				$(CURDIR)/kconfigs/hikey960.conf \
-				$(PATCHES_PATH)/kernel_config/usb_net_dm9601.conf \
-				$(PATCHES_PATH)/kernel_config/ftrace.conf
+				$(CURDIR)/kconfigs/hikey960.conf
 
 .PHONY: linux-defconfig
 linux-defconfig: $(LINUX_PATH)/.config
