@@ -4,10 +4,10 @@
 [submodule "gen_rootfs"]
 	path = gen_rootfs
 	url = https://github.com/linaro-swg/gen_rootfs
-[submodule "linux.96boards-hikey"]
+[submodule "linux.linaro-swg"]
 	path = linux
-	url = https://github.com/96boards-hikey/linux
-	branch = working-hikey960-upstream-rebase-v4.13-rc1-2017-07-20-08-46-50
+	url = https://github.com/linaro-swg/linux
+	branch = optee
 [submodule "optee_client"]
 	path = optee_client
 	url = https://github.com/OP-TEE/optee_client
