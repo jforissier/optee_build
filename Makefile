@@ -13,7 +13,7 @@ override COMPILE_S_KERNEL  := 64
 ################################################################################
 # Paths to git projects and various binaries
 ################################################################################
-ARM_TF_PATH		?= $(ROOT)/arm-trusted-firmware
+ARM_TF_PATH		?= $(ROOT)/trusted-firmware-a
 
 EDK2_PATH		?= $(ROOT)/edk2
 EDK2_BIN		?= $(EDK2_PATH)/Build/ArmVirtQemuKernel-AARCH64/DEBUG_GCC49/FV/QEMU_EFI.fd
@@ -69,6 +69,10 @@ arm-tf: optee-os edk2
 
 arm-tf-clean:
 	$(ARM_TF_EXPORTS) $(MAKE) -C $(ARM_TF_PATH) $(ARM_TF_FLAGS) clean
+
+tfa: arm-tf
+
+tfa-clean: arm-tf-clean
 
 ################################################################################
 # QEMU
