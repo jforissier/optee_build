@@ -18,7 +18,7 @@ export
 ################################################################################
 # Paths to git projects and various binaries
 ################################################################################
-ARM_TF_PATH			?= $(ROOT)/arm-trusted-firmware
+ARM_TF_PATH			?= $(ROOT)/trusted-firmware-a
 U-BOOT_PATH			?= $(ROOT)/u-boot
 QEMU_PATH			?= $(ROOT)/qemu
 BINARIES_PATH			?= $(ROOT)/out/bin
@@ -84,6 +84,10 @@ arm-tf: optee-os u-boot
 
 arm-tf-clean:
 	$(ARM_TF_EXPORTS) $(MAKE) -C $(ARM_TF_PATH) $(ARM_TF_FLAGS) clean
+
+tfa: arm-tf
+
+tfa-clean: arm-tf-clean
 
 ################################################################################
 # QEMU
