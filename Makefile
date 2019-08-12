@@ -22,7 +22,7 @@ CFG_WITH_STATS ?= y
 ################################################################################
 # Paths to git projects and various binaries
 ################################################################################
-ARM_TF_PATH			?= $(ROOT)/arm-trusted-firmware
+ARM_TF_PATH			?= $(ROOT)/trusted-firmware-a
 ifeq ($(DEBUG),1)
 ARM_TF_BUILD			?= debug
 else
@@ -99,6 +99,10 @@ arm-tf: optee-os edk2
 .PHONY: arm-tf-clean
 arm-tf-clean:
 	$(ARM_TF_EXPORTS) $(MAKE) -C $(ARM_TF_PATH) $(ARM_TF_FLAGS) clean
+
+tfa: arm-tf
+
+tfa-clean: arm-tf-clean
 
 ################################################################################
 # Busybox
