@@ -42,14 +42,14 @@ We recommend using a 64-bit Ubuntu-based Linux distribution to build this
 project. A few packages need to be installed::
 
   sudo dpkg --add-architecture i386
-  sudo apt-get update
-  sudo apt-get install android-tools-adb android-tools-fastboot autoconf \
+  sudo apt update
+  sudo apt install android-tools-adb android-tools-fastboot autoconf \
 	automake bc bison build-essential ccache cscope curl \
 	device-tree-compiler flex ftp-upload gdisk iasl libattr1-dev \
 	libc6:i386 libcap-dev libfdt-dev libftdi-dev libglib2.0-dev \
 	libhidapi-dev libncurses5-dev libpixman-1-dev libssl-dev \
 	libstdc++6:i386 libtool libz1:i386 make mtools netcat python-crypto \
-	python-serial python-wand unzip uuid-dev xdg-utils xterm xz-utils \
+	python3-pyelftools python-serial unzip uuid-dev xdg-utils xterm xz-utils \
 	zlib1g-dev
 
 The cross-compilers (toolchains) are preferably downloaded by doing
