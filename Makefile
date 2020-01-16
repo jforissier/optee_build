@@ -200,7 +200,6 @@ linux-cleaner: linux-cleaner-common
 ################################################################################
 OPTEE_OS_COMMON_FLAGS += PLATFORM=hikey-hikey960 \
 			CFG_CONSOLE_UART=$(CFG_CONSOLE_UART) \
-			CFG_SECURE_DATA_PATH=n \
 			CFG_WITH_STATS=$(CFG_WITH_STATS)
 OPTEE_OS_CLEAN_COMMON_FLAGS += PLATFORM=hikey-hikey960
 
