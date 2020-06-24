@@ -176,7 +176,7 @@ optee-client-clean: optee-client-clean-common
 # Soc-term
 ################################################################################
 soc-term:
-	$(MAKE) -C $(SOC_TERM_PATH)
+	$(MAKE) -C $(SOC_TERM_PATH) CFLAGS=-fPIE
 
 soc-term-clean:
 	$(MAKE) -C $(SOC_TERM_PATH) clean
