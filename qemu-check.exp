@@ -65,8 +65,8 @@ send -- "$cmd\r"
 set casenum "none"
 expect {
 	# Exit with error status as soon as a test fails
-	-re {  regression_([^ ]+) FAIL} {
-		info " $expect_out(1,string) FAIL\n"
+	-re {  (regression|gp)_([^ ]+) FAIL} {
+		info " $expect_out(2,string) FAIL\n"
 		exit 1
 	}
 	-re {rcu_sched detected stalls} {
@@ -74,8 +74,8 @@ expect {
 		exit 1
 	}
 	# Crude progress indicator: print one # when each test [sub]case starts
-	-re {([\*o]) regression_([^ ]+) } {
-		set casenum $expect_out(2,string)
+	-re {([\*o]) (regression|gp)_([^ ]+) } {
+		set casenum $expect_out(3,string)
 		if {$expect_out(1,string) == "o"} {
 			if {$star == 1} {
 				# Do not count first subcase ('o') since start
