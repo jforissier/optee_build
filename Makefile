@@ -219,6 +219,9 @@ update_rootfs: update_rootfs-common
 ################################################################################
 # Run targets
 ################################################################################
+
+QEMU_SMP ?= 2
+
 .PHONY: run
 # This target enforces updating root fs etc
 run: all
@@ -236,6 +239,7 @@ run-only:
 		-nographic \
 		-serial tcp:localhost:54320 -serial tcp:localhost:54321 \
 		-machine virt,secure=on -cpu cortex-a57 -m 1057 -bios $(ARM_TF_PATH)/build/qemu/release/bl1.bin \
+		-smp $(QEMU_SMP) \
 		-s -S -semihosting-config enable,target=native -d unimp \
 		-initrd $(GEN_ROOTFS_PATH)/filesystem.cpio.gz \
 		-kernel $(LINUX_PATH)/arch/arm64/boot/Image -no-acpi \
@@ -251,7 +255,10 @@ check-args := --timeout $(TIMEOUT)
 endif
 
 check: $(CHECK_DEPS)
-	expect qemu-check.exp -- $(check-args) || \
+	export QEMU=$(QEMU_PATH)/aarch64-softmmu/qemu-system-aarch64 && \
+	export QEMU_SMP=$(QEMU_SMP) && export ROOT=$(ROOT) && \
+	cd $(ARM_TF_PATH)/build/qemu/release && \
+	expect $(ROOT)/qemu-check.exp -- $(check-args) || \
 		(if [ "$(DUMP_LOGS_ON_ERROR)" ]; then \
 			echo "== $$PWD/serial0.log:"; \
 			cat serial0.log; \
